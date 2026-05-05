@@ -4,6 +4,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
+import fs from 'fs';
 
 import { connectDB } from './config/db';
 import { errorHandler } from './middleware/errorHandler';
@@ -13,6 +14,7 @@ import printerRoutes from './routes/printers';
 import reservationRoutes from './routes/reservations';
 import filamentRoutes from './routes/filaments';
 import userRoutes from './routes/users';
+import fileRoutes from './routes/files';
 
 const app = express();
 app.set('trust proxy', 1);
@@ -24,7 +26,10 @@ const corsOrigins = (process.env.CORS_ORIGIN || 'http://localhost:3000')
   .split(',')
   .map((s) => s.trim());
 
-app.use(helmet());
+const UPLOAD_DIR = process.env.UPLOAD_DIR || '/tmp/iems-uploads';
+if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+
+app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 app.use(
   cors({
     origin: true,
@@ -33,6 +38,7 @@ app.use(
 );
 app.use(express.json({ limit: '5mb' }));
 app.use(morgan('tiny'));
+app.use('/uploads', express.static(UPLOAD_DIR));
 
 // Rate limit only the auth routes
 const authLimiter = rateLimit({
@@ -51,6 +57,7 @@ app.use('/api/printers', printerRoutes);
 app.use('/api/reservations', reservationRoutes);
 app.use('/api/filaments', filamentRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/files', fileRoutes);
 
 app.use((_req, res) => res.status(404).json({ message: 'Not found' }));
 app.use(errorHandler);

@@ -3,7 +3,7 @@ import mongoose, { Document, Schema } from 'mongoose';
 export type PrinterStatus = 'available' | 'in_use' | 'maintenance';
 
 export interface IPrinter extends Document {
-  name: string; // e.g. "Bambu Lab P1P #1"
+  name: string;
   modelName: string;
   type: 'FDM' | 'Resin';
   status: PrinterStatus;
@@ -11,6 +11,9 @@ export interface IPrinter extends Document {
   currentSessionStart?: Date;
   totalHoursUsed: number;
   notes?: string;
+  bambuSerial?: string;
+  bambuIp?: string;
+  bambuAccessCode?: string;
 }
 
 const printerSchema = new Schema<IPrinter>(
@@ -27,6 +30,9 @@ const printerSchema = new Schema<IPrinter>(
     currentSessionStart: { type: Date },
     totalHoursUsed: { type: Number, default: 0 },
     notes: { type: String },
+    bambuSerial: { type: String },
+    bambuIp: { type: String },
+    bambuAccessCode: { type: String },
   },
   { timestamps: true }
 );

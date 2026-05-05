@@ -5,6 +5,27 @@ import { authenticate, requireAdmin, AuthRequest } from '../middleware/auth';
 
 const router = Router();
 
+router.patch(
+  '/me',
+  authenticate,
+  async (req: AuthRequest, res: Response, next) => {
+    try {
+      const { phone } = z.object({
+        phone: z.string().max(20).optional(),
+      }).parse(req.body);
+      const user = await User.findByIdAndUpdate(
+        req.user!.id,
+        { phone },
+        { new: true, select: '-password' }
+      );
+      if (!user) return res.status(404).json({ message: 'User not found' });
+      res.json(user);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
 router.get(
   '/',
   authenticate,

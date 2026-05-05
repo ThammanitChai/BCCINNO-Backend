@@ -20,6 +20,7 @@ export interface IReservation extends Document {
   hoursConsumed?: number;
   status: ReservationStatus;
   fileUrl?: string;
+  modelFileName?: string;
   cost?: number;
   notes?: string;
 }
@@ -43,6 +44,7 @@ const reservationSchema = new Schema<IReservation>(
       default: 'reserved',
     },
     fileUrl: { type: String },
+    modelFileName: { type: String },
     cost: { type: Number, default: 0 },
     notes: { type: String },
   },
