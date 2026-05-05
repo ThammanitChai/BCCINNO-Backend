@@ -15,6 +15,7 @@ import filamentRoutes from './routes/filaments';
 import userRoutes from './routes/users';
 
 const app = express();
+app.set('trust proxy', 1);
 const PORT = parseInt(process.env.PORT || '4000', 10);
 const MONGODB_URI =
   process.env.MONGODB_URI || 'mongodb://localhost:27017/iems-lab';
