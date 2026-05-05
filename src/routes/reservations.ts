@@ -41,6 +41,44 @@ router.get('/', authenticate, async (req: AuthRequest, res: Response) => {
   res.json(reservations);
 });
 
+// Get single reservation
+router.get('/:id', authenticate, async (req: AuthRequest, res: Response) => {
+  const reservation = await Reservation.findById(req.params.id)
+    .populate('user', 'firstName lastName studentId email track')
+    .populate('printer', 'name modelName type bambuSerial bambuIp bambuAccessCode');
+  if (!reservation) return res.status(404).json({ message: 'Reservation not found' });
+  if (reservation.user._id.toString() !== req.user!.id && req.user!.role !== 'admin') {
+    return res.status(403).json({ message: 'Forbidden' });
+  }
+  res.json(reservation);
+});
+
+// Admin: update reservation (actual hours, pickup time, notes, status override)
+router.patch('/:id', authenticate, requireAdmin, async (req: AuthRequest, res: Response, next) => {
+  try {
+    const schema = z.object({
+      hoursConsumed: z.number().min(0).optional(),
+      pickupTime: z.string().datetime().optional().nullable(),
+      notes: z.string().optional(),
+      status: z.enum(['reserved', 'in_progress', 'completed', 'cancelled']).optional(),
+    });
+    const body = schema.parse(req.body);
+    const update: Record<string, unknown> = {};
+    if (body.hoursConsumed !== undefined) update.hoursConsumed = body.hoursConsumed;
+    if (body.pickupTime !== undefined) update.pickupTime = body.pickupTime ? new Date(body.pickupTime) : null;
+    if (body.notes !== undefined) update.notes = body.notes;
+    if (body.status !== undefined) update.status = body.status;
+
+    const reservation = await Reservation.findByIdAndUpdate(req.params.id, update, { new: true })
+      .populate('user', 'firstName lastName studentId email track')
+      .populate('printer', 'name modelName type bambuSerial bambuIp bambuAccessCode');
+    if (!reservation) return res.status(404).json({ message: 'Reservation not found' });
+    res.json(reservation);
+  } catch (err) {
+    next(err);
+  }
+});
+
 // Today's schedule for grid view
 router.get(
   '/schedule/today',
@@ -118,6 +156,8 @@ router.post('/', authenticate, async (req: AuthRequest, res: Response, next) => 
       scheduledStart,
       scheduledHours: body.scheduledHours,
       fileUrl: body.fileUrl,
+      modelFileName: body.modelFileName,
+      infillPercent: body.infillPercent,
       notes: body.notes,
     });
     const populated = await reservation.populate([

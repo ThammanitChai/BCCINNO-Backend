@@ -24,6 +24,7 @@ export interface IReservation extends Document {
   infillPercent?: number;
   cost?: number;
   notes?: string;
+  pickupTime?: Date;
 }
 
 const reservationSchema = new Schema<IReservation>(
@@ -49,6 +50,7 @@ const reservationSchema = new Schema<IReservation>(
     infillPercent: { type: Number, min: 0, max: 100 },
     cost: { type: Number, default: 0 },
     notes: { type: String },
+    pickupTime: { type: Date },
   },
   { timestamps: true }
 );
