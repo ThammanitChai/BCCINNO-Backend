@@ -27,13 +27,7 @@ const corsOrigins = (process.env.CORS_ORIGIN || 'http://localhost:3000')
 app.use(helmet());
 app.use(
   cors({
-    origin: (origin, callback) => {
-      if (!origin || corsOrigins.includes(origin)) {
-        callback(null, origin || true);
-      } else {
-        callback(null, false);
-      }
-    },
+    origin: true,
     credentials: true,
   })
 );
