@@ -21,6 +21,7 @@ export interface IReservation extends Document {
   status: ReservationStatus;
   fileUrl?: string;
   modelFileName?: string;
+  infillPercent?: number;
   cost?: number;
   notes?: string;
 }
@@ -45,6 +46,7 @@ const reservationSchema = new Schema<IReservation>(
     },
     fileUrl: { type: String },
     modelFileName: { type: String },
+    infillPercent: { type: Number, min: 0, max: 100 },
     cost: { type: Number, default: 0 },
     notes: { type: String },
   },

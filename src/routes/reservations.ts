@@ -17,6 +17,8 @@ const createSchema = z.object({
   scheduledStart: z.string().datetime(),
   scheduledHours: z.number().min(0.5).max(48),
   fileUrl: z.string().url().optional(),
+  modelFileName: z.string().optional(),
+  infillPercent: z.number().min(0).max(100).optional(),
   notes: z.string().optional(),
 });
 
