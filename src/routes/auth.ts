@@ -12,8 +12,8 @@ const registerSchema = z.object({
   firstName: z.string().min(1),
   lastName: z.string().min(1),
   studentId: z.string().min(1),
-  nationalIdLast4: z.string().length(4).optional(),
-  phone: z.string().optional(),
+  nationalIdLast4: z.string().length(4).or(z.literal('')).optional().transform(v => v || undefined),
+  phone: z.string().optional().transform(v => v || undefined),
   track: z.enum(['training', 'inno_smart', 'quota_bme', 'quota_engineer', 'olympic', 'staff', 'customer']),
 });
 
