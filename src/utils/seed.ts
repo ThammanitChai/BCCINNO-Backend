@@ -27,7 +27,7 @@ async function seed() {
     console.log('• Admin user already exists');
   }
 
-  // Sample printers — match Bambu Lab fleet from the doc
+  // Printers
   const printerNames = [
     { name: 'Bambu Lab P1P #1', modelName: 'P1P', type: 'FDM' as const },
     { name: 'Bambu Lab P1P #2', modelName: 'P1P', type: 'FDM' as const },
@@ -38,64 +38,73 @@ async function seed() {
     { name: 'Bambu Lab X1-Carbon', modelName: 'X1-Carbon', type: 'FDM' as const },
   ];
   for (const p of printerNames) {
-    await Printer.updateOne(
-      { name: p.name },
-      { $setOnInsert: p },
-      { upsert: true }
-    );
+    await Printer.updateOne({ name: p.name }, { $setOnInsert: p }, { upsert: true });
   }
   console.log(`✓ ${printerNames.length} printers seeded`);
 
-  // Sample filaments — derived from the IEMS stock sheet
+  // Filaments
   const filaments = [
-    { type: 'PLA Pro', brand: 'Polymaker', subBrand: 'Polylight', color: 'White', recommendedStock: 15, minimumStock: 5, currentAmount: 14, pricePerGram: 2 },
-    { type: 'PLA Pro', brand: 'Polymaker', subBrand: 'Polylight', color: 'Black', recommendedStock: 15, minimumStock: 5, currentAmount: 10, pricePerGram: 2 },
-    { type: 'PLA', brand: 'Polymaker', subBrand: 'Polylight', color: 'Blue', recommendedStock: 5, minimumStock: 2, currentAmount: 9, pricePerGram: 1.875 },
-    { type: 'PLA', brand: 'Polymaker', subBrand: 'Polyterra', color: 'Charcoal Black', recommendedStock: 5, minimumStock: 2, currentAmount: 10, pricePerGram: 1.875 },
-    { type: 'PLA', brand: 'Polymaker', subBrand: 'Polyterra', color: 'Army Blue', recommendedStock: 4, minimumStock: 2, currentAmount: 6, pricePerGram: 1.875 },
-    { type: 'PLA', brand: 'Polymaker', subBrand: 'Polyterra', color: 'Mint', recommendedStock: 2, minimumStock: 1, currentAmount: 2, pricePerGram: 1.875 },
-    { type: 'PLA', brand: 'Bambu', color: 'White', recommendedStock: 2, minimumStock: 1, currentAmount: 1, pricePerGram: 2 },
-    { type: 'PLA', brand: 'Bambu', color: 'Green', recommendedStock: 2, minimumStock: 1, currentAmount: 5, pricePerGram: 2 },
-    { type: 'ABS', brand: 'Polymaker', subBrand: 'Polylight', color: 'White', recommendedStock: 10, minimumStock: 5, currentAmount: 16, pricePerGram: 2.5 },
-    { type: 'ABS', brand: 'Polymaker', subBrand: 'Polylight', color: 'Black', recommendedStock: 10, minimumStock: 5, currentAmount: 9, pricePerGram: 2.5 },
-    { type: 'PC-ABS', brand: 'Polymaker', color: 'Black', recommendedStock: 3, minimumStock: 2, currentAmount: 2, pricePerGram: 4 },
-    { type: 'PC-ABS', brand: 'Polymaker', color: 'White', recommendedStock: 3, minimumStock: 2, currentAmount: 2, pricePerGram: 4 },
+    // PLA Pro
+    { type: 'PLA Pro', brand: 'Polymaker', subBrand: 'Polylight', color: 'White',         recommendedStock: 15, minimumStock: 5, currentAmount: 14, pricePerGram: 2,   isDiscontinued: false },
+    { type: 'PLA Pro', brand: 'Polymaker', subBrand: 'Polylight', color: 'Black',         recommendedStock: 15, minimumStock: 5, currentAmount: 10, pricePerGram: 2,   isDiscontinued: false },
+    // PLA - Polymaker Polylight
+    { type: 'PLA',     brand: 'Polymaker', subBrand: 'Polylight', color: 'Blue',          recommendedStock: 5,  minimumStock: 2, currentAmount: 9,  pricePerGram: 2,   isDiscontinued: false },
+    // PLA - Polymaker Polyterra
+    { type: 'PLA',     brand: 'Polymaker', subBrand: 'Polyterra', color: 'Charcoal Black',recommendedStock: 5,  minimumStock: 2, currentAmount: 10, pricePerGram: 2,   isDiscontinued: false },
+    { type: 'PLA',     brand: 'Polymaker', subBrand: 'Polyterra', color: 'Army Blue',     recommendedStock: 4,  minimumStock: 2, currentAmount: 6,  pricePerGram: 2,   isDiscontinued: false },
+    { type: 'PLA',     brand: 'Polymaker', subBrand: 'Polyterra', color: 'Fossil Grey',   recommendedStock: 2,  minimumStock: 1, currentAmount: 2,  pricePerGram: 2,   isDiscontinued: false },
+    { type: 'PLA',     brand: 'Polymaker', subBrand: 'Polyterra', color: 'Forrest Green', recommendedStock: 2,  minimumStock: 1, currentAmount: 2,  pricePerGram: 2,   isDiscontinued: false },
+    { type: 'PLA',     brand: 'Polymaker', subBrand: 'Polyterra', color: 'Mint',          recommendedStock: 2,  minimumStock: 1, currentAmount: 2,  pricePerGram: 2,   isDiscontinued: false },
+    { type: 'PLA',     brand: 'Polymaker', subBrand: 'Polyterra', color: 'Banana',        recommendedStock: 2,  minimumStock: 1, currentAmount: 2,  pricePerGram: 2,   isDiscontinued: false },
+    { type: 'PLA',     brand: 'Polymaker', subBrand: 'Polyterra', color: 'Candy',         recommendedStock: 2,  minimumStock: 1, currentAmount: 2,  pricePerGram: 2,   isDiscontinued: false },
+    // PLA - Ender
+    { type: 'PLA',     brand: 'Ender',                            color: 'Grey',          recommendedStock: 2,  minimumStock: 1, currentAmount: 1,  pricePerGram: 1.5, isDiscontinued: false },
+    { type: 'PLA',     brand: 'Ender',                            color: 'Blue',          recommendedStock: 2,  minimumStock: 1, currentAmount: 1,  pricePerGram: 1.5, isDiscontinued: false },
+    // PLA - Bambu
+    { type: 'PLA',     brand: 'Bambu',                            color: 'White',         recommendedStock: 2,  minimumStock: 1, currentAmount: 1,  pricePerGram: 2,   isDiscontinued: false },
+    { type: 'PLA',     brand: 'Bambu',                            color: 'Green',         recommendedStock: 2,  minimumStock: 1, currentAmount: 5,  pricePerGram: 2,   isDiscontinued: false },
+    { type: 'PLA',     brand: 'Bambu',                            color: 'Orange',        recommendedStock: 2,  minimumStock: 1, currentAmount: 2,  pricePerGram: 2,   isDiscontinued: false },
+    // PLA Support
+    { type: 'PLA Support', brand: 'Bambu',                        color: 'White',         recommendedStock: 3,  minimumStock: 1, currentAmount: 3,  pricePerGram: 2.5, isDiscontinued: false },
+    // PLA Mussel / Trigo
+    { type: 'PLA Mussel',  brand: 'Francofil',                    color: 'Brown',         recommendedStock: 2,  minimumStock: 1, currentAmount: 1,  pricePerGram: 2.5, isDiscontinued: false },
+    { type: 'PLA Trigo',   brand: 'Francofil',                    color: 'Brown',         recommendedStock: 2,  minimumStock: 1, currentAmount: 2,  pricePerGram: 2.5, isDiscontinued: false },
+    // PLA - 3DD (Discontinued)
+    { type: 'PLA',     brand: '3DD',                              color: 'Black',         recommendedStock: 0,  minimumStock: 0, currentAmount: 3,  pricePerGram: 2,   isDiscontinued: true },
+    { type: 'PLA',     brand: '3DD',                              color: 'Red',           recommendedStock: 0,  minimumStock: 0, currentAmount: 2,  pricePerGram: 2,   isDiscontinued: true },
+    // PLA - Polymaker Panchroma
+    { type: 'PLA',     brand: 'Polymaker', subBrand: 'Panchroma', color: 'Cotton White',  recommendedStock: 2,  minimumStock: 1, currentAmount: 5,  pricePerGram: 2,   isDiscontinued: false },
+    { type: 'PLA',     brand: 'Polymaker', subBrand: 'Panchroma', color: 'Sku Forrest Green', recommendedStock: 2, minimumStock: 1, currentAmount: 1, pricePerGram: 2, isDiscontinued: false },
+    { type: 'PLA',     brand: 'Polymaker', subBrand: 'Panchroma', color: 'Pastel Banana', recommendedStock: 2, minimumStock: 1, currentAmount: 1,  pricePerGram: 2,   isDiscontinued: false },
+    // PLA - Creality/Ender (Discontinued)
+    { type: 'PLA',     brand: 'Creality',  subBrand: 'Ender',     color: 'Grey',          recommendedStock: 0,  minimumStock: 0, currentAmount: 1,  pricePerGram: 1.5, isDiscontinued: true },
+    { type: 'PLA',     brand: 'Creality',  subBrand: 'Ender',     color: 'Blue',          recommendedStock: 0,  minimumStock: 0, currentAmount: 1,  pricePerGram: 1.5, isDiscontinued: true },
+    // ABS
+    { type: 'ABS',     brand: 'Polymaker', subBrand: 'Polylight', color: 'White',         recommendedStock: 10, minimumStock: 5, currentAmount: 16, pricePerGram: 2.5, isDiscontinued: false },
+    { type: 'ABS',     brand: 'Polymaker', subBrand: 'Polylight', color: 'Black',         recommendedStock: 10, minimumStock: 5, currentAmount: 9,  pricePerGram: 2.5, isDiscontinued: false },
+    // PC-ABS
+    { type: 'PC-ABS',  brand: 'Polymaker',                        color: 'Black',         recommendedStock: 3,  minimumStock: 2, currentAmount: 2,  pricePerGram: 4,   isDiscontinued: false },
+    { type: 'PC-ABS',  brand: 'Polymaker',                        color: 'White',         recommendedStock: 3,  minimumStock: 2, currentAmount: 2,  pricePerGram: 4,   isDiscontinued: false },
+    // TPU95-HF
+    { type: 'TPU95-HF',brand: 'Polymaker', subBrand: 'Polyflex',  color: 'Translucent',   recommendedStock: 2,  minimumStock: 1, currentAmount: 2,  pricePerGram: 3,   isDiscontinued: false },
+    { type: 'TPU95-HF',brand: 'Polymaker', subBrand: 'Polyflex',  color: 'White',         recommendedStock: 2,  minimumStock: 1, currentAmount: 4,  pricePerGram: 3,   isDiscontinued: false },
+    { type: 'TPU95-HF',brand: 'Polymaker', subBrand: 'Polyflex',  color: 'Black',         recommendedStock: 2,  minimumStock: 1, currentAmount: 3,  pricePerGram: 3,   isDiscontinued: false },
+    // PC
+    { type: 'PC',      brand: 'Polymaker', subBrand: 'Polymax',   color: 'Black',         recommendedStock: 2,  minimumStock: 1, currentAmount: 3,  pricePerGram: 5,   isDiscontinued: false },
+    // PETG-ESD
+    { type: 'PETG-ESD',brand: 'Polymaker', subBrand: 'Polymax',   color: 'Black',         recommendedStock: 2,  minimumStock: 1, currentAmount: 2,  pricePerGram: 4,   isDiscontinued: false },
+    // PVA
+    { type: 'PVA',     brand: 'Bambu',                            color: 'Translucent',   recommendedStock: 4,  minimumStock: 2, currentAmount: 4,  pricePerGram: 5,   isDiscontinued: false },
   ];
+
   for (const f of filaments) {
     await Filament.updateOne(
-      { type: f.type, brand: f.brand, color: f.color, subBrand: f.subBrand || null },
-      { $setOnInsert: f },
+      { type: f.type, brand: f.brand, subBrand: (f as any).subBrand || null, color: f.color },
+      { $set: f },
       { upsert: true }
     );
   }
   console.log(`✓ ${filaments.length} filaments seeded`);
-
-  // Demo students
-  const demoStudents = [
-    {
-      email: 'thanapong.sa@bcc1852.com',
-      password: 'student1234',
-      firstName: 'Thanapong',
-      lastName: 'Satapornnanont',
-      studentId: '01979',
-      nationalIdLast4: '1327',
-      track: 'biomedical' as const,
-    },
-    {
-      email: 'suwanna@bcc1852.com',
-      password: 'student1234',
-      firstName: 'Suwanna',
-      lastName: 'Demo',
-      studentId: '12345',
-      nationalIdLast4: '0000',
-      track: 'engineer' as const,
-    },
-  ];
-  for (const s of demoStudents) {
-    const exists = await User.findOne({ email: s.email });
-    if (!exists) await User.create(s);
-  }
-  console.log(`✓ Demo students seeded`);
 
   await mongoose.disconnect();
   console.log('\n✓ Seed complete');
