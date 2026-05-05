@@ -56,7 +56,7 @@ app.use(errorHandler);
 
 (async () => {
   await connectDB(MONGODB_URI);
-  app.listen(PORT, () => {
+  app.listen(PORT, '0.0.0.0', () => {
     console.log(`✓ IEMS API listening on port ${PORT}`);
   });
 })();
