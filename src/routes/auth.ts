@@ -14,7 +14,7 @@ const registerSchema = z.object({
   studentId: z.string().min(1),
   nationalIdLast4: z.string().length(4).optional(),
   phone: z.string().optional(),
-  track: z.enum(['biomedical', 'engineer', 'secondary', 'primary', 'staff']),
+  track: z.enum(['training', 'inno_smart', 'quota_bme', 'quota_engineer', 'olympic', 'staff', 'customer']),
 });
 
 const loginSchema = z.object({

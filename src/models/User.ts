@@ -3,18 +3,22 @@ import bcrypt from 'bcryptjs';
 
 export type UserRole = 'student' | 'admin';
 export type UserTrack =
-  | 'biomedical'
-  | 'engineer'
-  | 'secondary'
-  | 'primary'
-  | 'staff';
+  | 'training'      // นักเรียนอบรมศูนย์วิจัยนวัตกรรมฯ 6h
+  | 'inno_smart'    // นักเรียน Inno / Smart 10h
+  | 'quota_bme'     // Quota: BME 12h
+  | 'quota_engineer'// Quota: Engineer 8h
+  | 'olympic'       // ความสามารถพิเศษ Olympic
+  | 'staff'         // Teacher / Academic Support / BCC Staff
+  | 'customer';     // บุคคลทั่วไป
 
 const TRACK_QUOTA: Record<UserTrack, number> = {
-  biomedical: 16,
-  engineer: 8,
-  secondary: 4,
-  primary: 2,
-  staff: 0, // approved per case
+  training: 6,
+  inno_smart: 10,
+  quota_bme: 12,
+  quota_engineer: 8,
+  olympic: 0,
+  staff: 0,
+  customer: 0,
 };
 
 export interface IUser extends Document {
@@ -53,7 +57,7 @@ const userSchema = new Schema<IUser>(
     phone: { type: String, trim: true },
     track: {
       type: String,
-      enum: ['biomedical', 'engineer', 'secondary', 'primary', 'staff'],
+      enum: ['training', 'inno_smart', 'quota_bme', 'quota_engineer', 'olympic', 'staff', 'customer'],
       required: true,
     },
     role: {
