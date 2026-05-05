@@ -29,13 +29,15 @@ async function seed() {
 
   // Printers
   const printerNames = [
-    { name: 'Bambu Lab P1P #1', modelName: 'P1P', type: 'FDM' as const },
-    { name: 'Bambu Lab P1P #2', modelName: 'P1P', type: 'FDM' as const },
-    { name: 'Bambu Lab P1P #3', modelName: 'P1P', type: 'FDM' as const },
-    { name: 'Bambu Lab P1S #1', modelName: 'P1S', type: 'FDM' as const },
-    { name: 'Bambu Lab P1S #2', modelName: 'P1S', type: 'FDM' as const },
-    { name: 'Bambu Lab P1S #3', modelName: 'P1S', type: 'FDM' as const },
-    { name: 'Bambu Lab X1-Carbon', modelName: 'X1-Carbon', type: 'FDM' as const },
+    { name: 'BCCInno_01',     modelName: 'P1P',      type: 'FDM'   as const },
+    { name: 'BCCInno_02',     modelName: 'P1P',      type: 'FDM'   as const },
+    { name: 'BCCInno_03',     modelName: 'P1P',      type: 'FDM'   as const },
+    { name: 'BCCInno_04',     modelName: 'P1P',      type: 'FDM'   as const },
+    { name: 'BCCInno_P1S_01', modelName: 'P1S',      type: 'FDM'   as const },
+    { name: 'BCCInno_P1S_02', modelName: 'P1S',      type: 'FDM'   as const },
+    { name: 'BCCInno_P1S_03', modelName: 'P1S',      type: 'FDM'   as const },
+    { name: 'BCCInno_X1',     modelName: 'X1-Carbon',type: 'FDM'   as const },
+    { name: 'Phrozen',        modelName: 'Phrozen',  type: 'Resin' as const },
   ];
   for (const p of printerNames) {
     await Printer.updateOne({ name: p.name }, { $setOnInsert: p }, { upsert: true });
