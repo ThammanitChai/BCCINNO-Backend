@@ -1,11 +1,12 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
 export type PrinterStatus = 'available' | 'in_use' | 'maintenance';
+export type PrinterType = 'FDM_open' | 'FDM_closed' | 'Resin';
 
 export interface IPrinter extends Document {
   name: string;
   modelName: string;
-  type: 'FDM' | 'Resin';
+  type: PrinterType;
   status: PrinterStatus;
   currentUser?: mongoose.Types.ObjectId;
   currentSessionStart?: Date;
@@ -20,7 +21,7 @@ const printerSchema = new Schema<IPrinter>(
   {
     name: { type: String, required: true, unique: true },
     modelName: { type: String, required: true },
-    type: { type: String, enum: ['FDM', 'Resin'], required: true },
+    type: { type: String, enum: ['FDM_open', 'FDM_closed', 'Resin'], required: true },
     status: {
       type: String,
       enum: ['available', 'in_use', 'maintenance'],

@@ -25,7 +25,7 @@ router.get('/:id', authenticate, async (req: AuthRequest, res: Response) => {
 const createSchema = z.object({
   name: z.string().min(1),
   modelName: z.string().min(1),
-  type: z.enum(['FDM', 'Resin']),
+  type: z.enum(['FDM_open', 'FDM_closed', 'Resin']),
   notes: z.string().optional(),
 });
 
